@@ -1,0 +1,3 @@
+cloud    = [the cloud configuration to work on]
+username = [your okeanos username]
+password = [your okeanos password]
