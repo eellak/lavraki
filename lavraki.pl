@@ -100,7 +100,6 @@ if ($auth_token ne $kamakiconfig{$cloud}{token}) {
 		$exp_date = Time::Piece->strptime($1, "%b. %d, %Y");
 	}
 
-	
 	say "The token has rotated. $kamakirc was updated.\n"
 		. "The active token expires on "
 		. $exp_date->strftime("%d/%m/%Y") . '.';
