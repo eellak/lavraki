@@ -14,6 +14,16 @@ my $lavrakirc = File::HomeDir->my_home . "/.lavrakirc";
 die("No $lavrakirc file found. Please create the configuration file first.")
 	unless -e $lavrakirc;
 
+# fix file permissions if not 0400
+my $lavrakirc_fperms = sprintf('%04o', ((stat($lavrakirc))[2] & 0777));
+
+if( $lavrakirc_fperms != '0400' ) {
+	die("Cannot change file permissions of $lavrakirc to 0400")
+		unless chmod(0400, $lavrakirc);
+
+	say "Fixed insecure file permissions for $lavrakirc.";
+}
+
 # the configuration file for kamaki
 my $kamakirc = File::HomeDir->my_home . "/.kamakirc";
 die("No $kamakirc file found. I guess you have no use this script..")
@@ -90,7 +100,7 @@ if ($auth_token ne $kamakiconfig{$cloud}{token}) {
 	$kamakiconfig{$cloud}{token} = $auth_token;
 	write_config %kamakiconfig;
 	
-	say "The tokens were different. $kamakirc was updated.\n"
-		. "The current token expires on "
-		. $exp_date->strftime("%d/%m/%Y");
+	say "The token has rotated. $kamakirc was updated.\n"
+		. "The active token expires on "
+		. $exp_date->strftime("%d/%m/%Y") . '.';
 }
