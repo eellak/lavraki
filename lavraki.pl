@@ -66,21 +66,6 @@ my $auth_token_input = $content->look_down(
 );
 my $auth_token = $auth_token_input->attr('value');
 
-# read the expiration date
-my $auth_token_exp_date = $content->look_down(
-	_tag    => q{span},
-	'class' => 'date',
-);
-
-# get the unformatted content of the expiration date..
-my $exp_date_nofmt = $auth_token_exp_date->as_text;
-
-# ..and convert it to a TimeDate object
-my $exp_date = '';
-if ($exp_date_nofmt =~ /\((.+?)\)/) {
-	$exp_date = Time::Piece->strptime($1, "%b. %d, %Y");
-}
-
 # read kamakirc to compare the auth tokens
 read_config $kamakirc => my %kamakiconfig;
 
@@ -99,6 +84,22 @@ if ($auth_token ne $kamakiconfig{$cloud}{token}) {
 	# change the token value and write it to the original ~/.kamakirc
 	$kamakiconfig{$cloud}{token} = $auth_token;
 	write_config %kamakiconfig;
+
+	# read the expiration date
+	my $auth_token_exp_date = $content->look_down(
+		_tag    => q{span},
+		'class' => 'date',
+	);
+
+	# get the unformatted content of the expiration date..
+	my $exp_date_nofmt = $auth_token_exp_date->as_text;
+
+	# ..and convert it to a TimeDate object
+	my $exp_date = '';
+	if ($exp_date_nofmt =~ /\((.+?)\)/) {
+		$exp_date = Time::Piece->strptime($1, "%b. %d, %Y");
+	}
+
 	
 	say "The token has rotated. $kamakirc was updated.\n"
 		. "The active token expires on "
