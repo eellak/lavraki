@@ -18,7 +18,7 @@ die("No $lavrakirc file found. Please create the configuration file first.")
 my $lavrakirc_fperms = sprintf('%04o', ((stat($lavrakirc))[2] & 0777));
 
 if( $lavrakirc_fperms != '0400' ) {
-	die("Cannot change file permissions of $lavrakirc to 0400")
+	die("Cannot change file permissions for $lavrakirc to 0400")
 		unless chmod(0400, $lavrakirc);
 
 	say "Fixed insecure file permissions for $lavrakirc.";
@@ -26,7 +26,7 @@ if( $lavrakirc_fperms != '0400' ) {
 
 # the configuration file for kamaki
 my $kamakirc = File::HomeDir->my_home . "/.kamakirc";
-die("No $kamakirc file found. I guess you have no use this script..")
+die("No $kamakirc file found. I guess you have no use for this script.")
 	unless -e $kamakirc;
 
 # read our configuration file
